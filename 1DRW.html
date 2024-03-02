@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random Walk Visualization</title>
+</head>
+<body>
+<canvas id="randomWalkCanvas" width="800" height="600" style="border:1px solid #000000;"></canvas>
+
+<script>
+    const canvas = document.getElementById('randomWalkCanvas');
+    const ctx = canvas.getContext('2d');
+    const n = 100; // Number of steps
+    let xList = [0];
+    let yList = [0];
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas for the new frame
+        ctx.beginPath();
+        ctx.moveTo(400, 300); // Starting point in the middle of the canvas
+
+        for (let i = 1; i < n; i++) {
+            const val = Math.floor(Math.random() * 2) + 1;
+            if (val == 1) {
+                xList.push(xList[i - 1] + 10); // Adjust step size for visibility
+                yList.push(yList[i - 1] + 10);
+            } else if (val == 2) {
+                xList.push(xList[i - 1] + 10); // Adjust step size for visibility
+                yList.push(yList[i - 1] - 10);
+            }
+
+            // Draw line to new point
+            ctx.lineTo(400 + xList[i], 300 + yList[i]);
+        }
+
+        ctx.strokeStyle = 'red';
+        ctx.stroke();
+    }
+
+    draw();
+</script>
+</body>
+</html>
