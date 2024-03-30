@@ -7,24 +7,52 @@
 </head>
 <body>
 
-<button onclick="showSection('education')">Education</button>
-<button onclick="showSection('awards')">Awards</button>
-<button onclick="showSection('publications')">Publications</button>
-<button onclick="showSection('talks')">Selected invited talks</button>
-
-<div id="education" class="info-section">
-    <h3>Education</h3>
-    <ul>
-        <li>April 2007 -- March 2010<br>High school, Hamamatsu Kita High School.</li>
-        <li>April 2010 -- March 2014<br>Undergraduate, Nagoya University.</li>
-        <li>April 2014 -- March 2016<br>Master in Research Institute for Mathematical Sciences, Kyoto University.</li>
-        <li>April 2016 -- March 2019<br>Ph.D. in Research Institute for Mathematical Sciences, Kyoto University. Advisor: Ryoki Fukushima.</li>
-    </ul>
+<!-- Language Switch Buttons -->
+<div class="language-switch">
+    <button onclick="switchLanguage('english')">English</button>
+    <button onclick="switchLanguage('japanese')">日本語</button>
+</div>
+<br>
+<!-- Section Display Buttons -->
+<div class="section-buttons">
+    <button onclick="showSection('education')">Education/教育</button>
+    <button onclick="showSection('awards')">Awards/受賞</button>
+    <button onclick="showSection('publications')">Publications/出版物</button>
+    <button onclick="showSection('talks')">Invited Talks/招待講演</button>
 </div>
 
+<!-- Sections -->
+<div id="education" class="info-section">
+    <div class="english">
+        <h3>Education</h3>
+        <ul>
+            <li>April 2007 -- March 2010<br>High school, Hamamatsu Kita High School.</li>
+            <li>April 2010 -- March 2014<br>Undergraduate, Nagoya University.</li>
+            <li>April 2014 -- March 2016<br>Master in Research Institute for Mathematical Sciences, Kyoto University.</li>
+            <li>April 2016 -- March 2019<br>Ph.D. in Research Institute for Mathematical Sciences, Kyoto University. Advisor: Ryoki Fukushima.</li>
+        </ul>
+    </div>
+    <div class="japanese">
+        <h3>教育</h3>
+        <ul>
+            <li>2007年4月 -- 2010年3月<br>浜松北高等学校</li>
+            <li>2010年4月 -- 2014年3月<br>名古屋大学 学部</li>
+            <li>2014年4月 -- 2016年3月<br>京都大学 数理解析研究所 修士課程</li>
+            <li>2016年4月 -- 2019年3月<br>京都大学 数理解析研究所 博士課程。指導教員: 福島良樹。</li>
+        </ul>
+    </div>
+</div>
+
+
 <div id="awards" class="info-section">
+    <div class="english">
     <h3>Awards</h3>
    <p> 2018th Takebe Prize</p>
+</div>
+<div class="japanese">
+    <h3>賞罰</h3>
+   <p> 2018年度建部賞</p>
+</div>
 </div>
     <div id="publications" class="info-section">
     <h3>Publications (Accepted)</h3>

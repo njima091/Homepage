@@ -6,13 +6,18 @@ function toggleAbstract(abstractId) {
         abstract.style.display = "none";
     }
 }
+function switchLanguage(language) {
+    const englishElements = document.querySelectorAll('.english');
+    const japaneseElements = document.querySelectorAll('.japanese');
+    englishElements.forEach(elem => elem.style.display = language === 'english' ? 'block' : 'none');
+    japaneseElements.forEach(elem => elem.style.display = language === 'japanese' ? 'block' : 'none');
+}
 
 function showSection(sectionId) {
-    // Hide all sections
-    document.querySelectorAll('.info-section').forEach(function(section) {
-        section.style.display = 'none';
-    });
-
-    // Show the selected section
+    const sections = document.querySelectorAll('.info-section');
+    sections.forEach(section => section.style.display = 'none');
     document.getElementById(sectionId).style.display = 'block';
 }
+
+// Initialize page with English content visible
+switchLanguage('english');

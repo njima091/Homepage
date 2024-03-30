@@ -3,6 +3,23 @@
     /* Add more styling as needed, such as padding, margin, font-size, etc. */
 }
 
+.japanese {
+    display: none;
+}
+
+.language-switch button, .section-buttons button {
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #aaa;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+.language-switch button:hover, .section-buttons button:hover {
+    background-color: #e9e9e9;
+}
+
 .info-section {
     display: none;
 }
+
