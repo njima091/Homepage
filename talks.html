@@ -1,60 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conference Talks</title>
-<style>
-  body { font-family: Arial, sans-serif; }
-  ul { list-style-type: none; padding: 0; }
-  li { padding: 8px; background: #f0f0f0; margin-bottom: 10px; }
-  li:nth-child(even) { background: #e9e9e9; }
-  .year { font-weight: bold; cursor: pointer; }
-</style>
-</head>
-<body>
-
-<h1>My Conference Talks</h1>
-
-<div>
-  <span class="year" onclick="filterTalks('2015')">2015</span> |
-  <span class="year" onclick="filterTalks('2016')">2016</span> |
-  <span class="year" onclick="filterTalks('2017')">2017</span> |
-  <span class="year" onclick="filterTalks('2018')">2018</span> |
-  <span class="year" onclick="filterTalks('2019')">2019</span> |
-  <span class="year" onclick="filterTalks('2020')">2020</span> |
-  <span class="year" onclick="filterTalks('')">All</span>
-</div>
-
-<ul id="talksList">
-  <!-- The talks will be listed here -->
-</ul>
-
-<script>
-  const talks = [
-    { title: "Concentration for first passage percolation", event: "The Third NIMS Summer School in Probability", location: "Daejeon, South Korea", date: "2015, June", invited: false },
-    { title: "Concentration results of first passage percolation", event: "Summer School on Dirichlet Forms and Stochastic Analysis", location: "Osaka, Japan", date: "2015, August", invited: false },
-    // Add the rest of your talks here
-  ];
-
-  function displayTalks(talks) {
-    const list = document.getElementById('talksList');
-    list.innerHTML = '';
-    talks.forEach(talk => {
-      const li = document.createElement('li');
-      li.innerHTML = \`${talk.title}, <strong>\${talk.event}</strong>, \${talk.location}, \${talk.date}\` + (talk.invited ? ' <strong>(Invited)</strong>' : '');
-      list.appendChild(li);
-    });
-  }
-
-  function filterTalks(year) {
-    const filteredTalks = talks.filter(talk => talk.date.includes(year));
-    displayTalks(filteredTalks);
-  }
-
-  // Initially display all talks
-  displayTalks(talks);
-</script>
-
-</body>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>opp</title>
+    <style>
+      img {
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="background-color: aqua">ahaha</h1>
+    <div>
+      <b style="color: gold"> 周大 nakajima</b>
+    </div>
+    <br />
+  </body>
 </html>
