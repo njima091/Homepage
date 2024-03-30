@@ -1,19 +1,43 @@
 <!DOCTYPE html>
-<html lang="ja">
-  <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <title>opp</title>
-    <style>
-      img {
-        width: 100px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1 style="background-color: aqua">ahaha</h1>
-    <div>
-      <b style="color: gold"> 周大 nakajima</b>
-    </div>
-    <br />
-  </body>
+    <title>Interactive CV</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<button onclick="showSection('education')">Education</button>
+<button onclick="showSection('membership')">Membership</button>
+<button onclick="showSection('awards')">Awards</button>
+<button onclick="showSection('language')">Language</button>
+<button onclick="showSection('publications')">Publications</button>
+<button onclick="showSection('talks')">Selected invited talks</button>
+
+<div id="education" class="info-section">
+    <!-- Education content here -->
+</div>
+
+<div id="membership" class="info-section">
+    <!-- Membership content here -->
+</div>
+
+<div id="awards" class="info-section">
+    <!-- Awards content here -->
+</div>
+
+<div id="language" class="info-section">
+    <!-- Language content here -->
+</div>
+
+<div id="publications" class="info-section">
+    <!-- Publications content here -->
+</div>
+
+<div id="talks" class="info-section">
+    <!-- Talks content here -->
+</div>
+
+<script src="script.js"></script>
+</body>
 </html>
