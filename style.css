@@ -2,3 +2,7 @@
     display: none;
     /* Add more styling as needed, such as padding, margin, font-size, etc. */
 }
+
+.info-section {
+    display: none;
+}
