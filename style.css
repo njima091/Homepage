@@ -20,7 +20,6 @@ header {
   padding: 10px 0;
 }
 
-
 .language-switch {
   display: flex;
   justify-content: flex-end;
@@ -41,7 +40,6 @@ header {
 .language-switch button:hover {
   background-color: #0056b3;
 }
-
 
 .section-buttons {
   display: flex;
