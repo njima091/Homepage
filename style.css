@@ -27,13 +27,14 @@ header {
 
 .language-switch button {
   margin: 0 5px;
-  padding: 10px 20px;
+  padding: 20px 20px;
   border-radius: 5px;
   border: 1px solid #ddd;
   background-color: #007bff;
   color: #fff;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-size: 20px;
 }
 
 .language-switch button:hover {
@@ -50,11 +51,12 @@ header {
   background-color: #28a745;
   border: none;
   color: #fff;
-  padding: 10px 20px;
+  padding: 20px 30px;
   border-radius: 5px;
   margin: 0 10px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-size: 20px;
 }
 
 .section-buttons button:hover {
