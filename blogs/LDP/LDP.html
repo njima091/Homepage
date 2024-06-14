@@ -7,6 +7,22 @@
     <script type="text/javascript" async
       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
+    <style>
+        body {
+            background-color:  #d7de9c; /* Light blue background */
+        }
+        h1 {
+            background-color:  #d7de9c; /* Lighter blue background for header */
+            padding: 10px;
+        }
+        p {
+            background-color: #d7de9c; /* White background for paragraphs */
+            padding: 10px;
+        }
+        .highlight {
+            background-color: #eae1e5; /* Light yellow for highlights */
+        }
+    </style>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
             tex2jax: {inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']]},
@@ -21,7 +37,7 @@
 
     <p>これだけ聞くと、あまり面白そうな理論ではないと感じる方も多いだろう。確率がゼロにいくものを調べても、実際ほとんど起きないのだから、物理的には意味がないのではないかと思うのは自然な気もする。しかし、身の回りに出てこないだけで、様々な自然現象の背景で大偏差原理が活躍している。どのように大偏差原理が働いているかは統計力学と絡めて議論すべき対象であるので先延ばしにする。今回は基本的な大偏差原理の定理を述べることにする。</p>
 
-    <p>\(\{X_i\}_{i \in \mathbb{N}}\)を独立同分布な確率変数列で任意の\(\lambda > 0\)について\(\mathbb{E} e^{\lambda X_i} < \infty\)であるものとする。標本平均を\(S_n = n^{-1}\sum_{i=1}^n X_i\)で定義する。任意の\(\lambda \in \mathbb{R}\)について、\(X_i\)の<font color="red">cumulant generating function</font>を</p>
+    <p>\(\{X_i\}_{i \in \mathbb{N}}\)を独立同分布な確率変数列で任意の\(\lambda > 0\)について\(\mathbb{E} e^{\lambda X_i} < \infty\)であるものとする。標本平均を\(S_n = n^{-1}\sum_{i=1}^n X_i\)で定義する。任意の\(\lambda \in \mathbb{R}\)について、\(X_i\)の<font color="red"> <strong> cumulant generating function </strong></font>を</p>
 
     <p>
     \[
@@ -37,7 +53,8 @@
     \]
     </p>
 
-    <p>と置く。関数\(I(\cdot)\)は<font color="red">rate function</font>と呼ばれる。</p>
+    <p>と置く。関数\(I(\cdot)\)は <font color="red"><strong>rate function</strong></font>
+        と呼ばれる。</p>
 
     <hr>
 
