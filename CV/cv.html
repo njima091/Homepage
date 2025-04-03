@@ -2,91 +2,261 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Curriculum Vitae</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Vitae - Shuta Nakajima</title>
     <style>
+        :root {
+            --primary-color: #3a7ca5;
+            --secondary-color: #2f6690;
+            --accent-color: #81c3d7;
+            --light-color: #f5f9fc;
+            --dark-color: #2c3e50;
+            --shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-        background-color: lightblue;
-    }
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin: 25px 0 15px 0;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 5px;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .language-switch {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-buttons {
+            display: flex;
+            flex-wrap: wrap;
+                      text-align: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .info-section {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        .japanese {
+            display: none;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .publication-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .publication-item:last-child {
+            border-bottom: none;
+        }
+        
+        .date-range {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .institution {
+            font-style: italic;
+        }
+        
+        .talk-item {
+            padding: 10px;
+            border-left: 3px solid var(--accent-color);
+            margin-bottom: 10px;
+            background-color: rgba(129, 195, 215, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .section-buttons {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="image.png" type="image/x-icon">
+ <link rel="icon" href="image.png" type="image/x-icon">
 </head>
 <body>
+    <header>
+        <h1>Shuta Nakajima</h1>
+        <p>Senior Lecturer at Meiji University</p>
+    </header>
 
-<!-- Language Switch Buttons -->
-<div class="language-switch">
-    <button onclick="switchLanguage('english')">English</button>
-    <button onclick="switchLanguage('japanese')">日本語</button>
-</div>
-<br>
-<!-- Section Display Buttons -->
-<!-- Sections -->
-<div class="section-buttons english">
-    <button onclick="showSection('education')">Education</button>
-    <button onclick="showSection('position')">Work History</button>
-    <button onclick="showSection('awards')">Awards</button>
-    <button onclick="showSection('publications')">Publications</button>
-    <button onclick="showSection('talks')">Talks</button>
-</div>
+    <!-- Language Switch Buttons -->
+    <div class="language-switch">
+        <button onclick="switchLanguage('english')">English</button>
+        <button onclick="switchLanguage('japanese')">日本語</button>
+    </div>
+<p><br /></p>
+    <!-- Section Display Buttons -->
+    <div class="section-buttons english">
+        <button onclick="showSection('education')" id="education-btn">Education</button>
+        <button onclick="showSection('position')" id="position-btn">Work History</button>
+        <button onclick="showSection('awards')" id="awards-btn">Awards</button>
+        <button onclick="showSection('publications')" id="publications-btn">Publications</button>
+        <button onclick="showSection('talks')" id="talks-btn">Talks</button>
+    </div>
 
-<div class="section-buttons japanese">
-    <button onclick="showSection('education')">教育</button>
-    <button onclick="showSection('position')">職歴</button>
-    <button onclick="showSection('awards')">受賞</button>
-    <button onclick="showSection('publications')">出版物</button>
-    <button onclick="showSection('talks')">招待講演</button>
-</div>
-<div id="education" class="info-section">
-    <div class="english">
-        <h3>Education</h3>
-        <ul>
-            <li>April 2007 -- March 2010<br>High school, Hamamatsu Kita High School.</li>
-            <li>April 2010 -- March 2014<br>Undergraduate, Nagoya University.</li>
-            <li>April 2014 -- March 2016<br>Master in Research Institute for Mathematical Sciences, Kyoto University.</li>
-            <li>April 2016 -- March 2019<br>Ph.D. in Research Institute for Mathematical Sciences, Kyoto University. Advisor: Ryoki Fukushima.</li>
-        </ul>
+    <div class="section-buttons japanese">
+        <button onclick="showSection('education')" id="education-btn-jp">教育</button>
+        <button onclick="showSection('position')" id="position-btn-jp">職歴</button>
+        <button onclick="showSection('awards')" id="awards-btn-jp">受賞</button>
+        <button onclick="showSection('publications')" id="publications-btn-jp">出版物</button>
+        <button onclick="showSection('talks')" id="talks-btn-jp">招待講演</button>
     </div>
-    <div class="japanese">
-        <h3>教育</h3>
-        <ul>
-            <li>2007年4月 -- 2010年3月<br>浜松北高等学校</li>
-            <li>2010年4月 -- 2014年3月<br>名古屋大学 理学部</li>
-            <li>2014年4月 -- 2016年3月<br>京都大学 数理解析研究所 修士課程</li>
-            <li>2016年4月 -- 2019年3月<br>京都大学 数理解析研究所 博士課程 指導教員: 福島竜輝准教授</li>
-        </ul>
-    </div>
-</div>
-<div id="position" class="info-section">
-    <div class="english">
-        <h3>Academic Position</h3>
-        <ul>
-            <li>April 2016 -- March 2019<br>JSPS Research Fellow DC1 at Kyoto University.</li>
-            <li>April 2019 -- March 2020<br>JSPS Research Fellow (Postdoc) at Nagoya University under Nobuo Yoshida.</li>
-            <li>April 2020 -- March 2022<br>Postdoctoral researcher at University of Basel under David Belius.</li>
-            <li>April 2022 -- present<br>Senior Lecturer at Meiji University.</li>
-        </ul>        
-    </div>
-    <div class="japanese">
-        <h3>職歴</h3>
-        <ul>
-            <li>2016年4月 -- 2019年3月<br>京都大学 JSPS特別研究員DC1</li>
-            <li>2019年4月 -- 2020年3月<br>名古屋大学 JSPSポスドク研究員 (受入研究員: 吉田伸生教授)</li>
-            <li>2020年4月 -- 2022年3月<br>バーゼル大学 ポスドク研究員 (採用者: David Belius)</li>
-            <li>2022年4月 -- 現在<br>明治大学 専任講師</li>            
-        </ul> 
-    </div>
-</div>
 
+    <div class="container">
+        <div id="education" class="info-section">
+            <div class="english">
+                <h2>Education</h2>
+                <ul>
+                    <li><span class="date-range">April 2007 - March 2010</span><br><span class="institution">Hamamatsu Kita High School</span></li>
+                    <li><span class="date-range">April 2010 - March 2014</span><br><span class="institution">Nagoya University</span></li>
+                    <li><span class="date-range">April 2014 - March 2016</span><br><span class="institution">Master in Research Institute for Mathematical Sciences, Kyoto University</span></li>
+                    <li><span class="date-range">April 2016 - March 2019</span><br><span class="institution">Ph.D. in Research Institute for Mathematical Sciences, Kyoto University</span><br>Advisor: Ryoki Fukushima</li>
+                </ul>
+            </div>
+            <div class="japanese">
+                <h2>教育</h2>
+                <ul>
+                    <li><span class="date-range">2007年4月 - 2010年3月</span><br><span class="institution">浜松北高等学校</span></li>
+                    <li><span class="date-range">2010年4月 - 2014年3月</span><br><span class="institution">名古屋大学 理学部</span></li>
+                    <li><span class="date-range">2014年4月 - 2016年3月</span><br><span class="institution">京都大学 数理解析研究所 修士課程</span></li>
+                    <li><span class="date-range">2016年4月 - 2019年3月</span><br><span class="institution">京都大学 数理解析研究所 博士課程</span><br>指導教員: 福島竜輝准教授</li>
+                </ul>
+            </div>
+        </div>
 
-<div id="awards" class="info-section">
-    <div class="english">
-    <h3>Awards</h3>
-   <p> 2018th Takebe Prize</p>
-</div>
-<div class="japanese">
-    <h3>賞罰</h3>
-   <p> 2018年度建部賞</p>
-</div>
+        <div id="position" class="info-section">
+            <div class="english">
+                <h2>Academic Position</h2>
+                <ul>
+                    <li><span class="date-range">April 2016 - March 2019</span><br><span class="institution">JSPS Research Fellow DC1 at Kyoto University</span></li>
+                    <li><span class="date-range">April 2019 - March 2020</span><br><span class="institution">JSPS Research Fellow (Postdoc) at Nagoya University</span><br>Under Nobuo Yoshida</li>
+                    <li><span class="date-range">April 2020 - March 2022</span><br><span class="institution">Postdoctoral researcher at University of Basel</span><br>Under David Belius</li>
+                    <li><span class="date-range">April 2022 - present</span><br><span class="institution">Senior Lecturer at Meiji University</span></li>
+                </ul>
+            </div>
+            <div class="japanese">
+                <h2>職歴</h2>
+                <ul>
+                    <li><span class="date-range">2016年4月 - 2019年3月</span><br><span class="institution">京都大学 JSPS特別研究員DC1</span></li>
+                    <li><span class="date-range">2019年4月 - 2020年3月</span><br><span class="institution">名古屋大学 JSPSポスドク研究員</span><br>受入研究員: 吉田伸生教授</li>
+                    <li><span class="date-range">2020年4月 - 2022年3月</span><br><span class="institution">バーゼル大学 ポスドク研究員</span><br>採用者: David Belius</li>
+                    <li><span class="date-range">2022年4月 - 現在</span><br><span class="institution">明治大学 専任講師</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="awards" class="info-section">
+            <div class="english">
+                <h2>Awards</h2>
+                <p>2018th Takebe Prize</p>
+            </div>
+            <div class="japanese">
+                <h2>賞罰</h2>
+                <p>2018年度建部賞</p>
+            </div>
+        </div>
 
 </div>
     <div id="publications" class="info-section">
@@ -108,9 +278,6 @@
   <li>E. Bolthausen, S. Nakajima, N. Sun, C. Xu. "Gardner formula for Ising perceptron models at small densities" Conference on Learning Theory, 1787-1911.</li>
   <li>Nakajima, Shuta; Sun, Nike. "Sharp threshold sequence and universality for Ising perceptron models", Proceedings of the 2023 Annual ACM-SIAM Symposium on Discrete Algorithms (SODA), 638--674, SIAM, Philadelphia, PA, 2023.</li>
   <li>Cosco, Clément; Nakajima, Shuta. "A variational formula for large deviations in first-passage percolation under tail estimates." Ann. Appl. Probab. 33 (2023), no. 3, 2103--2135.</li>
-  <li>Sun, Nike; Nakajima, Shuta. "Sharp threshold sequence and universality for Ising perception models." Proc. 2023 ACM-SIAM Symp. Discrete Algorithms (SODA), SIAM, 2023.</li>
-<li>Can, Van Hao; Quyết, Nguyễn Văn; Nakajima, Shuta. "Lipschitz continuity of time constants in generalized FPP." Stochastic Process. Appl., to appear.</li>
-<li>Can, Van Hao; Kubota, Naoki; Nakajima, Shuta. "Lipschitz-type estimate for the frog model with Bernoulli initial configuration." Math. Phys. Anal. Geom., to appear.</li>
 </ol>
 </div>
 <div class="japanese">
@@ -131,9 +298,6 @@
   <li>E. Bolthausen, S. Nakajima, N. Sun, C. Xu. "Gardner formula for Ising perceptron models at small densities" Conference on Learning Theory, 1787-1911.</li>
   <li>Nakajima, Shuta; Sun, Nike. "Sharp threshold sequence and universality for Ising perceptron models", Proceedings of the 2023 Annual ACM-SIAM Symposium on Discrete Algorithms (SODA), 638--674, SIAM, Philadelphia, PA, 2023.</li>
   <li>Cosco, Clément; Nakajima, Shuta. "A variational formula for large deviations in first-passage percolation under tail estimates." Ann. Appl. Probab. 33 (2023), no. 3, 2103--2135.</li>
-  <li>Sun, Nike; Nakajima, Shuta. "Sharp threshold sequence and universality for Ising perception models." Proc. 2023 ACM-SIAM Symp. Discrete Algorithms (SODA), SIAM, 2023.</li>
-<li>Can, Van Hao; Quyết, Nguyễn Văn; Nakajima, Shuta. "Lipschitz continuity of time constants in generalized FPP." Stochastic Process. Appl., to appear.</li>
-<li>Can, Van Hao; Kubota, Naoki; Nakajima, Shuta. "Lipschitz-type estimate for the frog model with Bernoulli initial configuration." Math. Phys. Anal. Geom., to appear.</li>
 </ol>
 </div>
 </div>
