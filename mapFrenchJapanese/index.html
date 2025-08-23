@@ -45,12 +45,12 @@
     .star{display:inline-block;min-width:1.5rem;height:1.5rem;line-height:1.5rem;text-align:center;border-radius:999px;background:var(--blue-200);color:#111;margin-right:6px;font-weight:900;border:1px solid var(--blue)}
 
     /* Numbered marker (Leaflet divIcon) */
-/* replace old marker styles with this (20px circle) */
+/* replace old marker styles with this (18px circle) */
 .marker-pin{
   background:#fde68a;
   border:1px solid #f59e0b;
-  width:20px;
-  height:20px;
+  width:18px;
+  height:18px;
   border-radius:50%;
   display:flex;
   align-items:center;
@@ -70,7 +70,7 @@
 }
 
     /* Star-circle marker for campus */
-    .marker-star-pin{position:relative;background:var(--blue-200);border:1px solid var(--blue);width:32px;height:32px;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.22)}
+    .marker-star-pin{position:relative;background:var(--blue-200);border:1px solid var(--blue);width:20px;height:20px;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.22)}
     .marker-star-pin:after{content:"";position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--blue)}
     .marker-star{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 14px/1 system-ui,Arial;color:#0f172a}
 
@@ -254,7 +254,7 @@ function numberedIcon(n){
     function resolveCollisions(){
       if(!map._loaded) return;
 
-      const minDist = 20;     // px between marker centers
+      const minDist = 18;     // px between marker centers
       const springK = 0.12;   // pull to base
       const iters = 18;
 
