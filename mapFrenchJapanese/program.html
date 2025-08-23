@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics Conference Schedule</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #8B2635 0%, #B22746 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .schedule-container {
+            padding: 30px;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        .schedule-table th {
+            background-color: #6c757d;
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid #5a6268;
+        }
+
+        .schedule-table th:first-child {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            width: 120px;
+            border-color: #2c3e50;
+        }
+
+        .schedule-table td {
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .schedule-table tr:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.01);
+        }
+
+        .time-slot {
+            font-weight: 600;
+            color: #2c3e50;
+            background-color: #e9ecef;
+        }
+
+        .speaker {
+            font-weight: 500;
+            color: #2c3e50;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .speaker:hover {
+            color: #0066cc;
+            text-decoration-color: #0066cc;
+            background-color: #f0f8ff;
+        }
+
+        .break {
+            background-color: #ffe69c !important; 
+            border-color: #b79300; 
+            color: #856404;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .special-event {
+            background-color: #a6dbee !important; 
+            border-color: #2678a5; 
+            color: #0c5460;
+            font-weight: 600;
+        }
+
+        .colloquium {
+            background-color: #d1c4e9 !important; 
+            border-color: #b39ddb; 
+            color: #4a235a;
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        .empty-slot {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .legend h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .legend-item {
+            display: inline-block;
+            margin: 5px 15px 5px 0;
+        }
+
+        .legend-color {
+            display: inline-block;
+            width: 22px;
+            height: 15px;
+            margin-right: 8px;
+            border-radius: 3px;
+            vertical-align: middle;
+            border: 2px solid #444;
+            box-sizing: border-box;
+        }
+        
+        .legend-regular {
+            background-color: #fff;
+            border-color: #888;
+        }
+        .legend-break {
+            background-color: #ffe69c;
+            border-color: #b79300;
+        }
+        .legend-special {
+            background-color: #a6dbee;
+            border-color: #2678a5;
+        }
+        .legend-colloquium {
+            background-color: #d1c4e9;
+            border-color: #b39ddb;
+        }
+
+        /* Styles for abstracts section */
+        .abstracts-section {
+            margin-top: 50px;
+            padding: 30px;
+            background: #f9f9f9;
+            border-top: 3px solid #2c3e50;
+        }
+
+        .abstracts-section h1 {
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 15px;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .speaker-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            scroll-margin-top: 100px;
+        }
+
+        .speaker-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .poster-title {
+            font-size: 1.1em;
+            font-style: italic;
+            color: #555;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+
+        .abstract-content {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .toggle-button {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-button:hover {
+            background-color: #357ae8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .schedule-container, .abstracts-section {
+                padding: 15px;
+            }
+            .schedule-table {
+                font-size: 0.85rem;
+            }
+            .schedule-table th,
+            .schedule-table td {
+                padding: 8px 5px;
+            }
+        }
+    </style>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</head>
+<body>
+    <div class="container">
+
+
+        <div class="header">
+            <h1>Program Schedule</h1>
+        </div>
+<div class="schedule-container">
+    <table class="schedule-table">
+
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Sep. 1</th>
+                        <th>Sep. 2</th>
+                        <th>Sep. 3</th>
+                        <th>Sep. 4</th>
+                        <th>Sep. 5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-slot">9:00-9:40</td>
+                        <td class="empty-slot">—</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractFunaki')">Funaki</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractNolin')">Nolin</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractShiraishi')">Shiraishi</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractCebron')">Cebron</td>
+                    </tr>
+                    <tr>
+                        <td class="time-slot">9:50-10:30</td>
+                        <td class="empty-slot">—</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractXie')">Xie</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractKawamoto')">Kawamoto</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractWatanabe')">Watanabe</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractSakuma')">Sakuma</td>
+                    </tr>
+                    <tr>
+                        <td class="time-slot">10:30-11:00</td>
+                        <td class="empty-slot">—</td>
+                        <td class="break">café</td>
+                        <td class="break">café</td>
+                        <td class="break">café</td>
+                        <td class="break">café</td>
+                    </tr>
+                    <tr>
+                        <td class="time-slot">11:00-11:40</td>
+                        <td class="empty-slot">—</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractDeya')">Deya</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractArcher')">Archer</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractBarraquand')">Barraquand</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractOkamoto')">Okamoto</td>
+                    </tr>
+                    <tr>
+                        <td class="time-slot">11:40-13:40</td>
+                        <td class="special-event">Opening</td>
+                        <td class="break">Lunch</td>
+                        <td class="break">Lunch</td>
+                        <td class="break">Lunch</td>
+                        <td class="break">Lunch</td>
+                    </tr>
+                    <tr>
+                        <td class="time-slot">13:40-14:20</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractHaas')">Haas</td>
+                        <td class="colloquium">[Colloquium]</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractGoudenege')">Goudenège</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractKatori')">Katori</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractSuda')">Suda</td>
+                    </tr>
+                    <tr>
+                        <td class="time-slot">14:30-15:10</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractFukushima')">Fukushima</td>
+                        <td class="colloquium">[Colloquium]</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractToriumi')">Toriumi</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractContat')">Contat</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractOlla')">Olla</td>
+                    </tr>
+                    <tr>
+                        <td class="time-slot">15:10-15:40</td>
+                        <td class="break">café</td>
+                        <td class="colloquium">[Colloquium]</td>
+                        <td class="break">café</td>
+                        <td class="break">café</td>
+                        <td class="special-event">Closing</td>
+                    </tr>
+                    <tr>
+                        <td class="time-slot">15:40-16:20</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractMouzard')">Mouzard</td>
+                        <td class="colloquium">[Colloquium]</td>
+                        <td class="special-event">Poster/Flash Talks</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractRiera')">Riera</td>
+                        <td class="empty-slot">—</td>
+                    </tr>
+                    <tr>
+                        <td class="time-slot">16:30-17:10</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractUeki')">Ueki</td>
+                        <td class="colloquium">[Colloquium]</td>
+                        <td class="empty-slot">—</td>
+                        <td class="speaker" onclick="scrollToAbstract('abstractAugeri')">Augeri</td>
+                        <td class="empty-slot">—</td>
+                    </tr>
+                    <tr>
+                        <td class="time-slot">Evening</td>
+                        <td class="empty-slot">—</td>
+                        <td class="empty-slot">—</td>
+                        <td class="special-event">Banquet</td>
+                        <td class="empty-slot">—</td>
+                        <td class="empty-slot">—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="legend">
+                <h3>Legend</h3>
+                <div class="legend-item" title="Regular Talks (default)">
+                    <span class="legend-color legend-regular"></span>
+                    Regular Talks (clickable)
+                </div>
+                <div class="legend-item" title="Breaks and Lunch Time">
+                    <span class="legend-color legend-break"></span>
+                    Breaks & Lunch
+                </div>
+                <div class="legend-item" title="Special Sessions like Opening, Banquet, etc.">
+                    <span class="legend-color legend-special"></span>
+                    Special Events
+                </div>
+                <div class="legend-item" title="Colloquium-style lectures or invited talks">
+                    <span class="legend-color legend-colloquium"></span>
+                    Colloquium
+                </div>
+            </div>
+        </div>
+
+<script>
+        /**
+         * Scrolls the page to the speaker's abstract card.
+         * @param {string} id The ID of the speaker card element.
+         */
+        function scrollToAbstract(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        /**
+         * Toggles the visibility of an abstract within a speaker card.
+         * @param {string} cardId The ID of the speaker-card container.
+         */
+        function toggleAbstract(cardId) {
+            const card = document.getElementById(cardId);
+            if (!card) return;
+
+            const abstractContent = card.querySelector('.abstract-content');
+            const button = card.querySelector('.toggle-button');
+
+            if (abstractContent.style.display === 'none' || abstractContent.style.display === '') {
+                abstractContent.style.display = 'block';
+                button.textContent = 'Hide Abstract';
+                // Re-render MathJax for the newly displayed content, if MathJax is loaded
+                if (window.MathJax) {
+                    MathJax.typesetPromise([abstractContent]).catch((err) => console.log('MathJax typesetting error:', err.message));
+                }
+            } else {
+                abstractContent.style.display = 'none';
+                button.textContent = 'Show Abstract';
+            }
+        }
+    </script>
+</body>
+</html>

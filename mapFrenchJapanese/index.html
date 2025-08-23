@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Waseda / Takada-Baba — Restaurant Map</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"/>
+  <style>
+    :root{
+      --accent:#0ea5e9; --accent-d:#0284c7; --ink:#0f172a; --muted:#64748b; --border:#e2e8f0; --bg:#ffffff;
+      --gold:#f59e0b; --gold-200:#fde68a; --blue:#2563eb; --blue-200:#bfdbfe;
+    }
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);
+      font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji")}
+    .container{max-width:1100px;margin:18px auto;padding:0 16px}
+
+    /* Header */
+    .hero{display:grid;grid-template-columns:1fr;gap:12px;margin:4px 0 10px}
+    .title{line-height:1.1;margin:0;font-weight:800;letter-spacing:.2px;font-size:clamp(24px, 3.2vw, 36px)}
+    .subtitle{margin:2px 0 0;color:var(--muted);font-size:clamp(12px,1.6vw,14px)}
+    .qr-row{display:flex;justify-content:flex-end;margin-top:8px}
+    .qr-card{
+      display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);
+      border-radius:12px;background:linear-gradient(180deg,#fff, #fbfdff);
+      box-shadow:0 2px 12px rgba(2,132,199,.06);
+    }
+    .qr-box{width:112px;height:112px;border-radius:10px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center}
+    .qr-meta{min-width:220px}
+    .qr-meta b{display:block;margin-bottom:2px}
+    .btn{display:inline-block;margin-top:6px;border:1px solid var(--accent-d);background:var(--accent);
+      color:#fff;text-decoration:none;font-weight:700;border-radius:8px;padding:6px 10px}
+    .btn:hover{background:var(--accent-d)}
+    .muted{color:var(--muted);font-size:.92em}
+
+    /* Map + list */
+    #map{height:78vh;width:100%;border:1px solid var(--border);border-radius:10px;background:#eef6fb}
+    .meta{display:flex;gap:12px;align-items:center;justify-content:space-between;margin:8px 0;color:var(--muted);font-size:0.9rem}
+    table{width:100%;border-collapse:collapse;margin-top:8px}
+    th,td{padding:6px 8px;border:1px solid var(--border);vertical-align:top}
+    th{background:#f8fafc;text-align:left}
+    td{width:50%}
+    .nameCell a{color:#0b66c3;text-decoration:none;font-weight:600}
+    .nameCell a:hover{text-decoration:underline}
+    .num{display:inline-block;min-width:1.5rem;height:1.5rem;line-height:1.5rem;text-align:center;border-radius:999px;background:var(--gold-200);color:#111;margin-right:6px;font-weight:700;border:1px solid var(--gold)}
+    .star{display:inline-block;min-width:1.5rem;height:1.5rem;line-height:1.5rem;text-align:center;border-radius:999px;background:var(--blue-200);color:#111;margin-right:6px;font-weight:900;border:1px solid var(--blue)}
+
+    /* Numbered marker (Leaflet divIcon) */
+    .marker-pin{position:relative;background:var(--gold-200);border:1px solid var(--gold);width:28px;height:28px;border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.22)}
+    .marker-pin:after{content:"";position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--gold)}
+    .marker-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 12px/1 system-ui,Arial;color:#111}
+
+    /* Star-circle marker for campus */
+    .marker-star-pin{position:relative;background:var(--blue-200);border:1px solid var(--blue);width:32px;height:32px;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.22)}
+    .marker-star-pin:after{content:"";position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--blue)}
+    .marker-star{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 14px/1 system-ui,Arial;color:#0f172a}
+
+    .leaflet-popup-content{font-size:14px;line-height:1.3}
+
+    /* For larger screens: title left, QR right (title sits higher) */
+    @media (min-width: 860px){
+      .hero{grid-template-columns:1.15fr .85fr;align-items:flex-start}
+      .qr-row{grid-column:2}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div><h1 class="title">Restaurant info around Waseda University</h1></div>
+      <div class="qr-row">
+        <div class="qr-card">
+          <div class="qr-box" id="qrcode" aria-label="QR code to full guide"></div>
+          <div class="qr-meta">
+            <b>Full Guide</b>
+            <div class="muted">Scan the code or tap the button to view the complete restaurant guide.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="map"></div>
+    <div class="meta"><div id="status">Plotting locations…</div><div>Tiles © OpenStreetMap contributors</div></div>
+
+    <table id="names">
+      <thead><tr><th>Spots</th><th>Spots</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    // QR
+    (function(){
+      const url = 'https://sites.google.com/view/frenchjapaneseconference/restaurant-guide?authuser=0';
+      const el = document.getElementById('qrcode');
+      if(el) new QRCode(el, { text: url, width: 96, height: 96, correctLevel: QRCode.CorrectLevel.M });
+    })();
+  </script>
+
+  <script>
+    const map = L.map('map');
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+
+    // Special: Waseda University Nishi-Waseda Campus (star-circle)
+    const campus = {
+      kind:'campus',
+      en:'Waseda University Nishi-Waseda Campus',
+      url:'https://www.waseda.jp/top/en/access/nishiwaseda-campus',
+      lat:35.706039, lng:139.706923
+    };
+
+    // Spots
+    const spots = [
+      { en:'Kotobuki (set meals)',              url:'https://maps.app.goo.gl/MfoX2xGvq8NeugAW8',    lat:35.708638,lng:139.705196 },
+      { en:'Koshuya Soba',                      url:'https://maps.app.goo.gl/fuvAbgcG78pRwirA6',    lat:35.7082981,lng:139.7078697 },
+      { en:'Naritaya (bento)',                  url:'https://maps.app.goo.gl/5yAjDqhHnCGXdvhBA',    lat:35.708638,lng:139.705196 },
+      { en:'Himawari', url:'https://tabelog.com/tokyo/A1304/A130404/13136019/', lat:35.704415, lng:139.708777 },
+      { en:'Big boy', url:'https://www.google.com/maps?q=35.7055969,139.7091636', lat:35.705597, lng:139.709164 },
+      { en:'Trattoria Matsumoto',        url:'https://maps.app.goo.gl/hRTGcK7vJfC4aab88', lat:35.7024616, lng:139.7091785 },
+      { en:'Sunrise Asian Dining & Bar', url:'https://maps.app.goo.gl/QyYfVk6p2eaaKbep9',  lat:35.7084348, lng:139.7054489 },
+      { en:'Himalaya Indian (naan & curry)', url:'https://maps.app.goo.gl/ywWCRuWaDG5qnpKD8', lat:35.704393, lng:139.708767 },
+      { en:'Ichizen (set meals)',               url:'https://maps.app.goo.gl/9NWQAHih9c2jpmy98',    lat:35.711788,lng:139.707592 },
+      { en:'Cafe Cotton Club (Italian)',        url:'https://maps.app.goo.gl/aWqLwjNiUd721Z5DA',    lat:35.712109,lng:139.706874 },
+      { en:'Shikokumon (Chinese)',              url:'https://maps.app.goo.gl/jmTzuyW9sNpavq8c8',    lat:35.713739,lng:139.704915 },
+      { en:'Kofu Gyoza (Chinese)',              url:'https://maps.app.goo.gl/9LoQiDey75us14aQ6',    lat:35.708638,lng:139.705196 },
+      { en:'La Vigne Akiko (bakery)',           url:'https://maps.app.goo.gl/ua7PfZJQcmBpAfF68',    lat:35.708584,lng:139.70929 },
+      { en:'BABA FLAT (bakery)',                url:'https://maps.app.goo.gl/CQckx4SMYVr52ShNA',    lat:35.708638,lng:139.705196 },
+      { en:'BABA FLAT Hanare (Western)',        url:'https://maps.app.goo.gl/uLRpo8k1EN5QfP2r6',    lat:35.706816,lng:139.704815 },
+      { en:'Cafe Omotenashamozi',               url:'https://maps.app.goo.gl/Ta7rf98C62BoWUMDA',    lat:35.711506,lng:139.710449 },
+      { en:'Travel-the-World Café',             url:'https://maps.app.goo.gl/AnmAQ24RJgUwVNqEA',    lat:35.713163,lng:139.707602 },
+      { en:'Maruga Maru (Sushi)',               url:'https://maps.app.goo.gl/DR1Ln47TkN7cAJPr8',    lat:35.712121,lng:139.704743 },
+      { en:'Menya Kokoro',                      url:'https://maps.app.goo.gl/L5tSeqQvs96kQQSG7',    lat:35.710621,lng:139.709885 },
+      { en:'Akaya Yokohama-style Ramen',        url:'https://maps.app.goo.gl/CFzndhDTHeBRSYKCA',    lat:35.708843,lng:139.709366 },
+      { en:'Disruptive Innovation',             url:'https://maps.app.goo.gl/2vSZzR8yufG9vjHFA',    lat:35.710701,lng:139.709636 },
+      { en:'Kageyama Chicken Paitan',           url:'https://maps.app.goo.gl/fcQ9pZgosCLyfdHL6',    lat:35.711408,lng:139.709656 },
+      { en:'Torisoba Sanpoichi',                url:'https://maps.app.goo.gl/FbsFdpVwRUBALXgf6',    lat:35.713234,lng:139.706196 },
+      { en:'Ramen Yamaguchi',                   url:'https://maps.app.goo.gl/6FVifzmTxVRTBm1d9',    lat:35.709971,lng:139.713877 },
+      { en:'Ristorante Bunryu',                 url:'https://maps.app.goo.gl/qoFmnk9cxYNxNXYE8',    lat:35.712827,lng:139.705138 },
+      { en:"McDonald's Meiji-dori Shinjuku Stepa", url:'https://map.mcdonalds.co.jp/map/13763', lat:35.705024, lng:139.708940 },
+      { en:'Burger King',                       url:'https://www.google.com/maps?q=東京都新宿区高田馬場1-27-3+バーガーキング高田馬場店', lat:35.7123811,lng:139.7047352 },
+      { en:'Yoshinoya (Beef Bowl)',             url:'https://stores.yoshinoya.com/yoshinoya/spot/detail?code=ysn_041467', lat:35.712987,lng:139.705334 }
+    ];
+
+    // Combined list with campus first
+    const places = [campus, ...spots];
+
+    function numberedIcon(n){
+      return L.divIcon({
+        className: '',
+        html: '<div class="marker-pin"><div class="marker-num">'+ n +'</div></div>',
+        iconSize: [28, 35],
+        iconAnchor: [14, 35],
+        popupAnchor: [0, -30]
+      });
+    }
+    function starIcon(){
+      return L.divIcon({
+        className: '',
+        html: '<div class="marker-star-pin"><div class="marker-star">★</div></div>',
+        iconSize: [32, 41],
+        iconAnchor: [16, 41],
+        popupAnchor: [0, -36]
+      });
+    }
+
+    // Build two-column list with campus first, then numbered spots
+    (function buildList(){
+      const tbody = document.querySelector('#names tbody');
+      const listItems = places.slice(); // campus + spots
+      let numCounter = 0;
+
+      for(let i=0;i<listItems.length;i+=2){
+        const tr = document.createElement('tr');
+
+        for(let k=0;k<2;k++){
+          const idx = i+k;
+          const td = document.createElement('td');
+          td.className = 'nameCell';
+
+          if(idx < listItems.length){
+            const s = listItems[idx];
+            const a = document.createElement('a');
+            a.href = s.url; a.target = '_blank'; a.rel = 'noopener';
+
+            if(s.kind === 'campus'){
+              a.innerHTML = '<span class="star">★</span>' + s.en;
+            }else{
+              numCounter += 1;
+              a.innerHTML = '<span class="num">'+ numCounter +'</span>' + s.en;
+            }
+            td.appendChild(a);
+          } else {
+            td.innerHTML = '&nbsp;';
+          }
+          tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+      }
+    })();
+
+    // Markers
+    const baseLatLng = places.map(s => L.latLng(s.lat, s.lng));
+    const markers = [];
+    const leaderLines = new Array(places.length);
+    let seq = 0; // numbering for non-campus
+
+    for(let i=0;i<places.length;i++){
+      const s = places[i];
+      const ll = baseLatLng[i];
+      const icon = (s.kind === 'campus') ? starIcon() : numberedIcon(++seq);
+      const m = L.marker(ll, { icon }).addTo(map);
+      m.bindPopup('<div class="en">'+ s.en +'</div><div><a href="'+ s.url +'" target="_blank" rel="noopener">Open map</a></div>');
+      markers.push(m);
+    }
+
+    // Fit to true positions
+    if(markers.length){
+      const g = L.featureGroup(markers);
+      map.fitBounds(g.getBounds().pad(0.12));
+      document.getElementById('status').textContent = `Plotted ${markers.length} locations.`;
+    }else{
+      map.setView([35.712,139.709],15);
+      document.getElementById('status').textContent = 'No locations plotted.';
+    }
+
+    // Screen-space collision resolution with spring to base
+    function resolveCollisions(){
+      if(!map._loaded) return;
+
+      const minDist = 34;     // px between marker centers
+      const springK = 0.12;   // pull to base
+      const iters = 18;
+
+      // project to pixel layer coords
+      const base = baseLatLng.map(ll => map.latLngToLayerPoint(ll));
+      const cur = base.map(p => L.point(p.x + (Math.random()-0.5)*0.1, p.y + (Math.random()-0.5)*0.1)); // epsilon to break ties
+
+      for(let it=0; it<iters; it++){
+        // spring force first
+        for(let i=0;i<cur.length;i++){
+          cur[i].x += (base[i].x - cur[i].x) * springK;
+          cur[i].y += (base[i].y - cur[i].y) * springK;
+        }
+        // repulsion
+        for(let i=0;i<cur.length;i++){
+          for(let j=i+1;j<cur.length;j++){
+            let dx = cur[j].x - cur[i].x;
+            let dy = cur[j].y - cur[i].y;
+            let d = Math.hypot(dx,dy);
+            if(d < 1e-6){
+              const ang = (i*9973 + j*31337) % 6283 / 1000;
+              dx = Math.cos(ang)*1e-3; dy = Math.sin(ang)*1e-3; d = Math.hypot(dx,dy);
+            }
+            if(d < minDist){
+              const overlap = (minDist - d) * 0.5;
+              const ux = dx / d, uy = dy / d;
+              cur[i].x -= ux * overlap; cur[i].y -= uy * overlap;
+              cur[j].x += ux * overlap; cur[j].y += uy * overlap;
+            }
+          }
+        }
+      }
+
+      // apply, draw leader lines if offset is noticeable
+      for(let i=0;i<markers.length;i++){
+        const ll = map.layerPointToLatLng(cur[i]);
+        markers[i].setLatLng(ll);
+
+        const pxOffset = base[i].distanceTo(cur[i]);
+        if(leaderLines[i]) map.removeLayer(leaderLines[i]);
+        if(pxOffset > 4){
+          leaderLines[i] = L.polyline([baseLatLng[i], ll], {
+            color: (places[i].kind === 'campus') ? '#2563eb' : '#f59e0b',
+            weight:1, opacity:0.5, interactive:false
+          }).addTo(map);
+        }
+      }
+    }
+
+    // Reflow on map events
+    map.whenReady(resolveCollisions);
+    map.on('zoomend moveend', () => requestAnimationFrame(resolveCollisions));
+    window.addEventListener('resize', () => requestAnimationFrame(resolveCollisions));
+  </script>
+</body>
+</html>

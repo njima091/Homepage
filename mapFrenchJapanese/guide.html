@@ -1,0 +1,625 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Guide - French-Japanese Conference</title>
+   <style>
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      /* Added for smooth scrolling */
+      html {
+          scroll-behavior: smooth;
+      }
+
+      body {
+          font-family: 'Georgia', 'Hiragino Kaku Gothic ProN', 'Meiryo', serif;
+          background: linear-gradient(135deg, #f9f4f2 0%, #fefefe 100%);
+          min-height: 100vh;
+          padding: 20px;
+      }
+
+    .poster {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+      .header {
+          background: linear-gradient(135deg, #712b2b 0%, #8b1f1f 100%);
+          color: white;
+          text-align: center;
+          padding: 40px 20px;
+          position: relative;
+      }
+
+      .header::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image:
+              radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+      }
+
+      .header-content {
+          position: relative;
+          z-index: 1;
+      }
+
+      .header h1 {
+          font-size: 2.5rem;
+          margin-bottom: 10px;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      }
+
+      .header p {
+          font-size: 1.2rem;
+          opacity: 0.95;
+      }
+
+      .content {
+          padding: 40px 30px;
+      }
+
+      .restaurant-card {
+          background: white;
+          border: 2px solid #e9ecef;
+          border-radius: 12px;
+          padding: 20px;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+      }
+
+      .restaurant-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+          border-color: #712b2b;
+      }
+
+      .restaurant-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 4px;
+          height: 100%;
+          background: linear-gradient(135deg, #8b1f1f, #712b2b);
+      }
+
+      .restaurant-name {
+          font-size: 1.3rem;
+          font-weight: bold;
+          color: #712b2b;
+          margin-bottom: 8px;
+          padding-left: 15px;
+      }
+
+      .restaurant-type {
+          color: #666;
+          font-size: 1rem;
+          margin-bottom: 15px;
+          padding-left: 15px;
+          font-style: italic;
+      }
+
+      .restaurant-link {
+          display: inline-block;
+          background: linear-gradient(135deg, #8b1f1f, #712b2b);
+          color: white;
+          text-decoration: none;
+          padding: 8px 16px;
+          border-radius: 25px;
+          font-size: 0.9rem;
+          transition: all 0.3s ease;
+          margin-left: 15px;
+      }
+      /* Style for jump link is shared with restaurant-link */
+      .header .restaurant-link {
+          margin-left: 0; /* Remove margin for header link */
+      }
+
+      .restaurant-link:hover {
+          background: linear-gradient(135deg, #712b2b, #8b1f1f);
+          transform: scale(1.05);
+      }
+
+      .cuisine-section {
+          margin-bottom: 40px;
+      }
+
+      .cuisine-title {
+          font-size: 1.5rem;
+          color: #712b2b;
+          margin-bottom: 20px;
+          text-align: center;
+          padding: 15px;
+          background: linear-gradient(90deg, transparent, #f8f9fa, transparent);
+          border-top: 2px solid #e9ecef;
+          border-bottom: 2px solid #e9ecef;
+      }
+      .restaurants {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+          gap: 20px;
+      }
+
+      .footer {
+          background: #fcfafa;
+          text-align: center;
+          padding: 30px;
+          color: #555;
+          border-top: 3px solid #8b1f1f;
+      }
+
+      .language-buttons {
+          margin-top: 20px;
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          flex-wrap: wrap;
+      }
+
+      .lang-btn {
+          background: rgba(255,255,255,0.2);
+          color: white;
+          border: 2px solid rgba(255,255,255,0.3);
+          padding: 8px 16px;
+          border-radius: 20px;
+          cursor: pointer;
+          font-size: 0.9rem;
+          transition: all 0.3s ease;
+          backdrop-filter: blur(10px);
+      }
+
+      .lang-btn:hover {
+          background: rgba(255,255,255,0.3);
+          border-color: rgba(255,255,255,0.5);
+          transform: translateY(-2px);
+      }
+
+      .lang-btn.active {
+          background: white;
+          color: #712b2b;
+          border-color: white;
+          font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+          .restaurants {
+              grid-template-columns: 1fr;
+          }
+          .header h1 { font-size: 2rem; }
+          .header p { font-size: 1rem; }
+      }
+</style>
+</head>
+<body>
+    <div class="poster">
+        <div class="header">
+            <div class="header-content">
+                <h1 class="multi-lang" data-en="Restaurant Guide" data-fr="Guide des Restaurants" data-ja="レストランガイド">Restaurant Guide</h1>
+                <p class="multi-lang" data-en="Dining Options" data-fr="Options de Restauration" data-ja="お食事オプション">Dining Options</p>
+
+                <div style="margin:15px 0;">
+                  
+<a href="#embedded-map" class="restaurant-link" id="jump-to-map-link">
+    <span class="multi-lang" data-en="🗺️ Click here to jump to the map" ...>
+        🗺️ Click here to jump to the map
+    </span>
+</a>
+                </div>
+
+
+                <div class="language-buttons">
+                    <button class="lang-btn active" data-lang="en">English</button>
+                    <button class="lang-btn" data-lang="fr">🇫🇷 Français</button>
+                    <button class="lang-btn" data-lang="ja">🇯🇵 日本語</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="cuisine-section">
+                <div class="cuisine-title">
+                    <span class="multi-lang" data-en="🍱 Traditional Japanese Cuisine" data-fr="🍱 Cuisine Japonaise Traditionnelle" data-ja="🍱 伝統的な日本料理">🍱 Traditional Japanese Cuisine</span>
+                </div>
+                <div class="restaurants">
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">寿</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Kotobuki (Set Meals)" data-fr="Repas Complets" data-ja="定食">Kotobuki (Set Meals)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/MfoX2xGvq8NeugAW8" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">ひまわり</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Himawari (Set Meals)" data-fr="Repas Complets" data-ja="定食">Himawari (Set Meals)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/TL84kRjTVxuxCVHp7" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">助寿司</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Sukesushi (Sushi)" data-fr="Sushi" data-ja="寿司">Sukesushi (Sushi)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/KgyC99v9ENrAWW3G7" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">甲州屋蕎麦店</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Koshuya Soba-ten (Soba Noodles)" data-fr="Nouilles Soba" data-ja="そば">Koshuya Soba-ten (Soba Noodles)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/fuvAbgcG78pRwirA6" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+<div class="restaurant-card">
+<div class="restaurant-name">めし処 和來</div>
+<div class="restaurant-type">
+<span class="multi-lang" data-en="Meshi-dokoro Warai (Japanese Set Meals)" data-fr="Meshi-dokoro Warai (Repas Japonais)" data-ja="和定食">Meshi-dokoro Warai (Japanese Set Meals)</span>
+</div>
+<a href="https://www.google.com/maps/search/?api=1&query=%E3%82%81%E3%81%97%E5%87%A6+%E5%92%8C%E4%BE%86&query_place_id=ChIJiVt2_n6NGGARQr4EH9X0ywA" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+</div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">成田屋</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Narita-ya (Bento / Lunch Boxes)" data-fr="Boîtes Bento" data-ja="お弁当">Narita-ya (Bento / Lunch Boxes)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/5yAjDqhHnCGXdvhBA" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">一膳</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Ichizen (Set Meals)" data-fr="Repas Complets" data-ja="定食">Ichizen (Set Meals)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/9NWQAHih9c2jpmy98" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">まるがまる　</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Marugamaru (Sushi)" data-fr="Sushi" data-ja="寿司">Marugamaru (Sushi)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/DR1Ln47TkN7cAJPr8" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cuisine-section">
+                <div class="cuisine-title">
+                    <span class="multi-lang" data-en="🍜 Ramen & Noodles" data-fr="🍜 Ramen et Nouilles" data-ja="🍜 ラーメン・麺類">🍜 Ramen & Noodles</span>
+                </div>
+                <div class="restaurants">
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">麺屋こころ</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Menya Kokoro (Ramen)" data-fr="Ramen" data-ja="ラーメン">Menya Kokoro (Ramen)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/L5tSeqQvs96kQQSG7" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">横浜家系ラーメン赤家</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Akaya (Yokohama Iekei Ramen)" data-fr="Ramen Style Yokohama" data-ja="横浜家系ラーメン">Akaya (Yokohama Iekei Ramen)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/CFzndhDTHeBRSYKCA" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">破壊的イノベーション</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Hakaiteki Innovation (Innovative Ramen)" data-fr="Ramen Innovant" data-ja="革新的ラーメン">Hakaiteki Innovation (Innovative Ramen)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/2vSZzR8yufG9vjHFA" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">鶏白湯麺 蔭山</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Kageyama (Tori Paitan Ramen)" data-fr="Ramen au Bouillon de Poulet" data-ja="鶏白湯ラーメン">Kageyama (Tori Paitan Ramen)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/fcQ9pZgosCLyfdHL6" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">鶏そば 三歩一</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Sanpoichi (Chicken Soba)" data-fr="Soba au Poulet" data-ja="鶏そば">Sanpoichi (Chicken Soba)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/FbsFdpVwRUBALXgf6" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">つけ麺屋 やすべえ</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Yasubee (Tsukemen / Dipping Noodles)" data-fr="Nouilles Tsukemen" data-ja="つけ麺">Yasubee (Tsukemen / Dipping Noodles)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/kfQAB9LEmhCkTLQv6" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">らぁ麺やまぐち</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Ramen Yamaguchi (Ramen)" data-fr="Ramen" data-ja="ラーメン">Ramen Yamaguchi (Ramen)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/6FVifzmTxVRTBm1d9" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cuisine-section">
+                <div class="cuisine-title">
+                    <span class="multi-lang" data-en="🌍 International Cuisine" data-fr="🌍 Cuisine Internationale" data-ja="🌍 国際料理">🌍 International Cuisine</span>
+                </div>
+                <div class="restaurants">
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">Trattoria Matsumoto</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Trattoria Matsumoto (Italian)" data-fr="Cuisine Italienne" data-ja="イタリア料理">Trattoria Matsumoto (Italian)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/fuvAbgcG78pRwirA6" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+<div class="restaurant-card">
+<div class="restaurant-name">クッチーナカフェ オリーヴァ</div>
+<div class="restaurant-type">
+<span class="multi-lang" data-en="Cucina Caffe Oliva (Italian)" data-fr="Cucina Caffe Oliva (Italien)" data-ja="クッチーナカフェ オリーヴァ">Cucina Caffe Oliva (Italian)</span>
+</div>
+<a href="https://www.google.com/maps/search/?api=1&query=%E3%82%AF%E3%83%83%E3%83%81%E3%83%BC%E3%83%8A%E3%82%AB%E3%83%95%E3%82%A7+%E3%82%AA%E3%83%AA%E3%83%BC%E3%83%B4&query_place_id=ChIJTyC2K5iNGGARGzscaA1wpgQ" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+</div>
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">カフェ コットンクラブ</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Cafe Cotton Club (Italian Café)" data-fr="Café Italien" data-ja="イタリアンカフェ">Cafe Cotton Club (Italian Café)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/aWqLwjNiUd721Z5DA" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">リストランテ 高田馬場 文流</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Ristorante Bunryu (Italian)" data-fr="Restaurant Italien" data-ja="イタリアンレストラン">Ristorante Bunryu (Italian)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/qoFmnk9cxYNxNXYE8" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">馬場FLAT Hanare</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Baba FLAT Hanare (Western Set Meals)" data-fr="Repas Occidentaux" data-ja="洋定食">Baba FLAT Hanare (Western Set Meals)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/uLRpo8k1EN5QfP2r6" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">サンライズ アジアンダイニングバー</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Sunrise Asian Dining & Bar (Naan, Curry, Thai)" data-fr="Restaurant Asiatique" data-ja="アジア料理 (ナン, カレー, タイ)">Sunrise Asian Dining & Bar (Naan, Curry, Thai)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/QyYfVk6p2eaaKbep9" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">インド料理ヒマラヤ</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Himalaya (Indian Cuisine)" data-fr="Cuisine Indienne" data-ja="インド料理 (ナン & カレー)">Himalaya (Indian Cuisine)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/ywWCRuWaDG5qnpKD8" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">石庫門</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Shikumen (Chinese Cuisine)" data-fr="Cuisine Chinoise" data-ja="中華料理">Shikumen (Chinese Cuisine)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/jmTzuyW9sNpavq8c8" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">孔府餃子</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Kofugyoza (Chinese Dumplings)" data-fr="Raviolis Chinois" data-ja="中華餃子">Kofugyoza (Chinese Dumplings)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/9LoQiDey75us14aQ6" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cuisine-section">
+                <div class="cuisine-title">
+                    <span class="multi-lang" data-en="🥖 Bakery & Café" data-fr="🥖 Boulangerie et Café" data-ja="🥖 ベーカリー＆カフェ">🥖 Bakery & Café</span>
+                </div>
+                <div class="restaurants">
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">La Vigne Akiko（ベーカリー）</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="La Vigne Akiko (Bakery)" data-fr="Boulangerie" data-ja="ベーカリー">La Vigne Akiko (Bakery)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/ua7PfZJQcmBpAfF68" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">パンとコーヒー 馬場FLAT</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Baba FLAT (Bakery & Coffee)" data-fr="Boulangerie et Café" data-ja="ベーカリー＆コーヒー">Baba FLAT (Bakery & Coffee)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/CQckx4SMYVr52ShNA" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">Café Omotenashamozi</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Café Omotenashamozi (Café with Set Meals & Curry)" data-fr="Café avec Repas" data-ja="カフェ (定食・カレーあり)">Café Omotenashamozi (Café with Set Meals & Curry)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/Ta7rf98C62BoWUMDA" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">地球を旅するcafé</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Chikyu wo Tabi suru Café (Travel-themed Café)" data-fr="Café à Thème Voyage" data-ja="旅がテーマのカフェ">Chikyu wo Tabi suru Café (Travel-themed Café)</span>
+                        </div>
+                        <a href="https://maps.app.goo.gl/AnmAQ24RJgUwVNqEA" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cuisine-section">
+                <div class="cuisine-title">
+                    <span class="multi-lang" data-en="🍟 Fast Food" data-fr="🍟 Restauration Rapide" data-ja="🍟 ファーストフード">🍟 Fast Food</span>
+                </div>
+
+                   <div class="restaurants">
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">マクドナルド</div>
+
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="McDonald's" data-fr="McDonald's" data-ja="マクドナルド">McDonald's</span>
+                        </div>
+                        <a href="https://map.mcdonalds.co.jp/map/13717" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">フレッシュネスバーガー</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Freshness Burger" data-fr="Freshness Burger" data-ja="フレッシュネスバーガー">Freshness Burger</span>
+                        </div>
+                        <a href="https://www.google.com/maps?q=東京都新宿区大久保3-14-3+フレッシュネスバーガー西早稲田店" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">モスバーガー</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Mos Burger" data-fr="Mos Burger" data-ja="モスバーガー">Mos Burger</span>
+                        </div>
+                        <a href="https://www.google.com/maps?q=東京都新宿区西早稲田1-9-19+モスバーガー西早稲田店" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">バーガーキング</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Burger King" data-fr="Burger King" data-ja="バーガーキング">Burger King</span>
+                        </div>
+                        <a href="https://www.google.com/maps?q=東京都新宿区高田馬場1-27-3+バーガーキング高田馬場店" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">ケンタッキーフライドチキン</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="KFC" data-fr="KFC" data-ja="ケンタッキー">KFC</span>
+                        </div>
+                        <a href="https://www.google.com/maps?q=東京都新宿区馬場下町6-5+ケンタッキーフライドチキン早稲田駅前店" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+<div class="restaurant-card">
+<div class="restaurant-name">やよい軒</div>
+<div class="restaurant-type">
+<span class="multi-lang" data-en="Yayoiken (Set Meal Restaurant)" data-fr="Yayoiken (Restaurant Teishoku)" data-ja="やよい軒（定食）">Yayoiken (Set Meal Restaurant)</span>
+</div>
+<a href="https://maps.google.com/?cid=6415797458425977297&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+</div>
+
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">カレーハウス CoCo壱番屋</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Curry House CoCo Ichibanya (Japanese Curry)" data-fr="CoCo Ichibanya" data-ja="カレーハウス CoCo壱番屋">Curry House CoCo Ichibanya (Japanese Curry)</span>
+                        </div>
+                        <a href="https://www.google.com/maps?q=東京都新宿区西早稲田2-18-23+CoCo壱番屋新宿早稲田通店" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">松屋</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Matsuya (Beef Bowl)" data-fr="Matsuya (Bol de Bœuf)" data-ja="牛めし">Matsuya (Beef Bowl)</span>
+                        </div>
+                        <a href="https://www.google.com/maps?q=東京都新宿区馬場下町62-18+松屋早稲田店" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">すき家</div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Sukiya (Beef Bowl)" data-fr="Sukiya (Bol de Bœuf)" data-ja="すき家（牛丼）">Sukiya (Beef Bowl)</span>
+                        </div>
+                        <a href="https://www.google.com/maps?q=東京都新宿区高田馬場1-28-4+すき家高田馬場店" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+
+                    <div class="restaurant-card">
+                        <div class="restaurant-name">吉野家 </div>
+                        <div class="restaurant-type">
+                            <span class="multi-lang" data-en="Yoshinoya (Beef Bowl)" data-fr="Yoshinoya (Bol de Bœuf)" data-ja="吉野家（牛丼）">Yoshinoya (Beef Bowl)</span>
+                        </div>
+                        <a href="https://www.google.com/maps?q=東京都新宿区高田馬場1-26-12+吉野家高田馬場駅前店" class="restaurant-link" target="_blank">📍 <span class="multi-lang" data-en="View Map" data-fr="Voir Carte" data-ja="地図を見る">View Map</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+<br><br>
+
+<div id="embedded-map" style="width:100%; max-width:85%; margin:-20px auto 40px auto; border-radius:20px; overflow:hidden;">
+  <iframe
+    src="https://www.google.com/maps/d/u/0/embed?mid=13GDrFO2bJWCSG7LrGnMAhufV0gd_0bU&ehbc=2E312F"
+    width="100%"
+    height="600"
+    style="border:0;"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+</div>
+
+        <div class="footer">
+            <p class="multi-lang"
+               data-en="Click on 'View Map' links to get directions to each restaurant."
+               data-fr="Cliquez sur les liens 'Voir Carte' pour obtenir les directions vers chaque restaurant."
+               data-ja="「地図を見る」リンクをクリックすると、各レストランへの道順が表示されます。">
+               Click on 'View Map' links to get directions to each restaurant.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const langButtons = document.querySelectorAll('.lang-btn');
+            const translatableElements = document.querySelectorAll('.multi-lang');
+
+            langButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedLang = button.dataset.lang;
+                    langButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    translatableElements.forEach(el => {
+                        el.innerHTML = el.dataset[selectedLang] || el.dataset['en'];
+                    });
+                });
+            });
+        });
+    </script>
+<!-- HTML内どこかの下部（既存の<script>の後でOK） -->
+<script>
+    // ... 既存のJSそのまま ...
+    document.getElementById('jump-to-map-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        const map = document.getElementById('embedded-map');
+        if (map) {
+            map.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            window.location.hash = '#embedded-map';
+        }
+    });
+</script>
+</body>
+</html>
