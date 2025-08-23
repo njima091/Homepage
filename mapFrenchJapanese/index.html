@@ -170,15 +170,16 @@
     // Combined list with campus first
     const places = [campus, ...spots];
 
-    function numberedIcon(n){
-      return L.divIcon({
-        className: '',
-        html: '<div class="marker-pin"><div class="marker-num">'+ n +'</div></div>',
-        iconSize: [28, 35],
-        iconAnchor: [14, 35],
-        popupAnchor: [0, -30]
-      });
-    }
+// replace your numberedIcon with this (centered, 20px)
+function numberedIcon(n){
+  return L.divIcon({
+    className: '',
+    html: '<div class="marker-pin"><div class="marker-num">'+ n +'</div></div>',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],   // center the icon on the lat/lng
+    popupAnchor: [0, -12]   // popup sits above the circle
+  });
+}
     function starIcon(){
       return L.divIcon({
         className: '',
